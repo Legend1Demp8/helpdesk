@@ -248,6 +248,86 @@ perl -v
 This is perl 5, version 32, subversion 1 (v5.32.1) built for x86_64-linux-thread-multi
 ```
 
+## 6. Модули Perl
+### Было
+Модули Perl`a:
+```
+sudo /opt/otrs/bin/otrs.CheckModules.pl
+   o Apache::DBI......................ok (v1.12)
+   o Apache2::Reload..................ok (v0.13)
+   o Archive::Tar.....................ok (v1.92)
+   o Archive::Zip.....................ok (v1.30)
+   o Crypt::Eksblowfish::Bcrypt.......ok (v0.009)
+   o Crypt::SSLeay....................ok (v0.64)
+   o Date::Format.....................ok (v2.24)
+   o DateTime.........................ok (v1.04)
+   o DBI..............................ok (v1.627)
+   o DBD::mysql.......................ok (v4.023)
+   o DBD::ODBC........................Not installed! (optional - Required to connect to a MS-SQL database.)
+   o DBD::Oracle......................Not installed! (optional - Required to connect to a Oracle database.)
+   o DBD::Pg..........................ok (v2.19.3)
+   o Digest::SHA......................ok (v5.85)
+   o Encode::HanExtra.................ok (v0.23)
+   o IO::Socket::SSL..................ok (v1.94)
+   o JSON::XS.........................ok (v3.01)
+   o List::Util::XS...................ok (v1.27)
+   o LWP::UserAgent...................ok (v6.26)
+   o Mail::IMAPClient.................ok (v3.37)
+     o IO::Socket::SSL................ok (v1.94)
+     o Authen::SASL...................ok (v2.15)
+     o Authen::NTLM...................ok (v1.09)
+   o ModPerl::Util....................ok (v2.000010)
+   o Net::DNS.........................ok (v0.72)
+   o Net::LDAP........................ok (v0.56)
+   o Template.........................ok (v2.24)
+   o Template::Stash::XS..............ok (undef)
+   o Text::CSV_XS.....................ok (v1.00)
+   o Time::HiRes......................ok (v1.9725)
+   o XML::LibXML......................ok (v2.0018)
+   o XML::LibXSLT.....................ok (v1.80)
+   o XML::Parser......................ok (v2.41)
+   o YAML::XS.........................ok (v0.54)
+```
+### Стало
+Модули Perl`a:
+```
+sudo /opt/otrs/bin/otrs.CheckModules.pl
+  o Apache::DBI......................ok (v1.12)
+  o Apache2::Reload..................ok (v0.13)
+  o Archive::Tar.....................ok (v2.38)
+  o Archive::Zip.....................ok (v1.68)
+  o Crypt::Eksblowfish::Bcrypt.......ok (v0.009)
+  o Crypt::SSLeay....................ok (v0.72)
+  o Date::Format.....................ok (v2.24)
+  o DateTime.........................ok (v1.54)
+  o DBI..............................ok (v1.643)
+  o DBD::mysql.......................ok (v4.053)
+  o DBD::ODBC........................Not installed! Use: 'cpan DBD::ODBC' (optional - Required to connect to a MS-SQL database.)
+  o DBD::Oracle......................Not installed! Use: 'cpan DBD::Oracle' (optional - Required to connect to a Oracle database.)
+  o DBD::Pg..........................ok (v3.14.2)
+  o Digest::SHA......................ok (v6.02)
+  o Encode::HanExtra.................ok (v0.23)
+  o IO::Socket::SSL..................ok (v2.073)
+  o JSON::XS.........................ok (v4.04)
+  o List::Util::XS...................ok (v1.56)
+  o LWP::UserAgent...................ok (v6.26)
+  o Mail::IMAPClient.................ok (v3.42)
+    o IO::Socket::SSL................ok (v2.073)
+    o Authen::SASL...................ok (v2.16)
+    o Authen::NTLM...................ok (v1.09)
+  o ModPerl::Util....................ok (v2.000012)
+  o Net::DNS.........................ok (v1.29)
+  o Net::LDAP........................ok (v0.68)
+  o Template.........................ok (v3.009)
+  o Template::Stash::XS..............ok (undef)
+  o Text::CSV_XS.....................ok (v1.65)
+  o Time::HiRes......................ok (v1.9764)
+  o XML::LibXML......................ok (v2.0206)
+  o XML::LibXSLT.....................ok (v1.99)
+  o XML::Parser......................ok (v2.46)
+  o YAML::XS.........................ok (v0.82)
+```
+
 ## Процесс обновления
 ```
 sudo dnf update
@@ -255,5 +335,9 @@ sudo dnf install -y epel-release
 sudo dnf install -y httpd mod_ssl mod_http2 mod_perl
 sudo dnf install -y mariadb-server
 sudo dnf config-manager --set-enabled crb
-sudo dnf install -y  perl-Archive-Tar  perl-Archive-Zip  perl-Authen-SASL  perl-Crypt-Eksblowfish  perl-Crypt-SSLeay  perl-DBD-MySQL  perl-DBD-Pg  perl-Digest-SHA  perl-LDAP  perl-libwww-perl  perl-LWP-Protocol-https  perl-Mail-IMAPClient  perl-Net-DNS  perl-Template-Toolkit  perl-Text-CSV_XS  perl-XML-LibXML  perl-XML-LibXSLT  perl-XML-Parser  perl-App-cpanminus  perl-YAML-LibYAML  perl-JSON-XS  perl-TimeDate  perl-DateTime
+sudo dnf install -y perl-Archive-Tar perl-Archive-Zip perl-Authen-SASL perl-Crypt-Eksblowfish perl-Crypt-SSLeay perl-DBD-MySQL perl-DBD-Pg perl-Digest-SHA perl-LDAP perl-libwww-perl perl-LWP-Protocol-https perl-Mail-IMAPClient perl-Net-DNS perl-Template-Toolkit perl-Text-CSV_XS perl-XML-LibXML perl-XML-LibXSLT perl-XML-Parser perl-App-cpanminus perl-YAML-LibYAML perl-JSON-XS perl-TimeDate perl-DateTime perl-Encode-HanExtra
+
+
+sudo useradd -d /opt/otrs -c 'OTRS user' -g apache -s /bin/bash -M otrs
+
 ```
