@@ -254,4 +254,6 @@ sudo dnf update
 sudo dnf install -y epel-release
 sudo dnf install -y httpd mod_ssl mod_http2 mod_perl
 sudo dnf install -y mariadb-server
+sudo dnf config-manager --set-enabled crb
+sudo dnf install -y  perl-Archive-Tar  perl-Archive-Zip  perl-Authen-SASL  perl-Crypt-Eksblowfish  perl-Crypt-SSLeay  perl-DBD-MySQL  perl-DBD-Pg  perl-Digest-SHA  perl-LDAP  perl-libwww-perl  perl-LWP-Protocol-https  perl-Mail-IMAPClient  perl-Net-DNS  perl-Template-Toolkit  perl-Text-CSV_XS  perl-XML-LibXML  perl-XML-LibXSLT  perl-XML-Parser  perl-App-cpanminus  perl-YAML-LibYAML  perl-JSON-XS  perl-TimeDate  perl-DateTime
 ```
