@@ -341,4 +341,22 @@ sudo dnf install -y perl-Archive-Tar perl-Archive-Zip perl-Authen-SASL perl-Cryp
 
 sudo useradd -d /opt/otrs -c 'OTRS user' -g apache -s /bin/bash -M otrs
 
+
+# На СТАРОМ сервере (останавливаем фоновые задачи OTRS на время копирования):
+su - otrs -c "/opt/otrs/bin/otrs.Daemon.pl stop"
+su - otrs -c "/opt/otrs/bin/Cron.sh stop"
+
+# Копируем папку на новый сервер (выполнить со старого сервера):
+rsync -avz --delete /opt/otrs/ root@IP_НОВОГО_СЕРВЕРА:/opt/otrs/
+
+# 1. Выставляем правильные права на /opt/otrs для пользователя otrs и группы apache
+sudo /opt/otrs/bin/otrs.SetPermissions.pl --web-group=apache
+
+# 3. Проверяем подключение к перенесенной базе MariaDB
+sudo su - otrs -c "/opt/otrs/bin/otrs.Console.pl Maint::Database::Check"
+
+# Копируем файлы cron (если их еще нет в /opt/otrs/var/cron/ без суффикса .dist)
+sudo su - otrs -c "/opt/otrs/bin/Cron.sh start"
+sudo su - otrs -c "/opt/otrs/bin/otrs.Daemon.pl start"
+
 ```
