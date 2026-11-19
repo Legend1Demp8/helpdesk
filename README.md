@@ -233,6 +233,20 @@ mysql -V
 mysql  Ver 15.1 Distrib 10.5.29-MariaDB, for Linux (x86_64) using  EditLine wrapper
 ```
 
+## 5. Perl
+### Было
+Версия Perl:
+```
+perl -v
+This is perl 5, version 16, subversion 3 (v5.16.3) built for x86_64-linux-thread-multi
+```
+
+### Сейчас
+Версия Perl:
+```
+perl -v
+This is perl 5, version 32, subversion 1 (v5.32.1) built for x86_64-linux-thread-multi
+```
 
 ## Процесс обновления
 ```
