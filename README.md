@@ -342,9 +342,63 @@ sudo dnf install -y perl-Archive-Tar perl-Archive-Zip perl-Authen-SASL perl-Cryp
 sudo useradd -d /opt/otrs -c 'OTRS user' -g apache -s /bin/bash -M otrs
 
 
-# На СТАРОМ сервере (останавливаем фоновые задачи OTRS на время копирования):
-su - otrs -c "/opt/otrs/bin/otrs.Daemon.pl stop"
-su - otrs -c "/opt/otrs/bin/Cron.sh stop"
+
+## • Проверьте в /opt/otrs/Kernel/Config.pm, не зашиты ли там жестко старый IP-адрес сервера, старый hostname или пути, которых нет на AlmaLinux.
+
+```
+
+## Момент переноса
+```
+# 1. Выключаем веб-сервер, чтобы клиенты и агенты не создавали новые тикеты и сессии
+sudo systemctl stop httpd
+
+# 2. Останавливаем планировщик Cron и демон OTRS (чтобы не забиралась почта и не срабатывали триггеры)
+sudo su - otrs -c "/opt/otrs/bin/Cron.sh stop"
+sudo su - otrs -c "/opt/otrs/bin/otrs.Daemon.pl stop"
+
+# 3. Если на сервере крутится локальный почтовик (Postfix/Exim) или Fetchmail — ставим их на паузу
+sudo systemctl stop postfix 2>/dev/null || true
+
+----------------------------------------------
+
+# 1. Снимаем дамп базы (замените otrs на имя вашей БД, если оно другое)
+mysqldump -u root -p --single-transaction --routines --triggers --events --databases otrs | gzip > /tmp/otrs_db.sql.gz
+
+# 2. Выгружаем пользователей и их права в виде SQL-запросов
+mysql -u root -p -N -e "SELECT CONCAT('SHOW GRANTS FOR \'', user, '\'@\'', host, '\';') FROM mysql.user WHERE user NOT IN ('root', 'mysql.sys', 'mariadb.sys', '');" | mysql -u root -p -N | sed 's/$/;/' > /tmp/grants.sql
+
+----------------------------------------------
+
+# 1. Копируем дампы БД
+scp /tmp/otrs_db.sql.gz /tmp/grants.sql root@IP_НОВОГО_СЕРВЕРА:/tmp/
+
+# 2. Копируем всю директорию /opt/otrs с сохранением симлинков, прав и времени модификации
+rsync -avz --delete /opt/otrs/ root@IP_НОВОГО_СЕРВЕРА:/opt/otrs/
+
+# 3. Копируем ваши конфиги виртуальных хостов Apache и SSL-сертификаты (проверьте свои пути)
+scp -r /etc/httpd/conf.d/* root@IP_НОВОГО_СЕРВЕРА:/tmp/old_httpd_conf.d/
+
+----------------------------------------------
+
+# 1. Загружаем базу и права в MariaDB
+gunzip < /tmp/otrs_db.sql.gz | mysql -u root -p
+mysql -u root -p < /tmp/grants.sql
+mysql -u root -p -e "FLUSH PRIVILEGES;"
+
+# 2. Выставляем правильные права на /opt/otrs для пользователя otrs и группы apache
+sudo /opt/otrs/bin/otrs.SetPermissions.pl --web-group=apache
+
+# 3. Чистим старый кэш и пересобираем конфиг
+sudo su - otrs -c "/opt/otrs/bin/otrs.Console.pl Maint::Cache::Delete"
+sudo su - otrs -c "/opt/otrs/bin/otrs.Console.pl Maint::Config::Rebuild"
+
+---------------------------------------------
+
+
+# 3. Проверяем подключение к перенесенной базе MariaDB
+sudo su - otrs -c "/opt/otrs/bin/otrs.Console.pl Maint::Database::Check"
+
+
 
 # Копируем папку на новый сервер (выполнить со старого сервера):
 rsync -avz --delete /opt/otrs/ root@IP_НОВОГО_СЕРВЕРА:/opt/otrs/
@@ -352,11 +406,15 @@ rsync -avz --delete /opt/otrs/ root@IP_НОВОГО_СЕРВЕРА:/opt/otrs/
 # 1. Выставляем правильные права на /opt/otrs для пользователя otrs и группы apache
 sudo /opt/otrs/bin/otrs.SetPermissions.pl --web-group=apache
 
-# 3. Проверяем подключение к перенесенной базе MariaDB
-sudo su - otrs -c "/opt/otrs/bin/otrs.Console.pl Maint::Database::Check"
+
 
 # Копируем файлы cron (если их еще нет в /opt/otrs/var/cron/ без суффикса .dist)
+
+
+
+
 sudo su - otrs -c "/opt/otrs/bin/Cron.sh start"
 sudo su - otrs -c "/opt/otrs/bin/otrs.Daemon.pl start"
+
 
 ```
