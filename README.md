@@ -344,6 +344,23 @@ sudo useradd -d /opt/otrs -c 'OTRS user' -g apache -s /bin/bash -M otrs
 
 
 ## • Проверьте в /opt/otrs/Kernel/Config.pm, не зашиты ли там жестко старый IP-адрес сервера, старый hostname или пути, которых нет на AlmaLinux.
+## • Проверьте  на старом сервере пакеты which htmldoc wkhtmltopdf pdftotext catdoc xls2csv unzip unrar fetchmail certbot 2>/dev/null
+## • Проверьте  на старом сервере настройки для БД grep -RhoE '^[^#;[:space:]].*' /etc/my.cnf /etc/my.cnf.d/ 2>/dev/null
+
+
+# 1. Крон пользователя root и пользователя otrs
+crontab -l 2>/dev/null
+crontab -u otrs -l 2>/dev/null
+
+# 2. Системные кроны
+cat /etc/crontab
+ls -la /etc/cron.d/
+
+# 3. Самописные скрипты в /usr/local/bin
+ls -la /usr/local/bin/
+
+# Список установленных пакетов OTRS
+su - otrs -c "/opt/otrs/bin/otrs.Console.pl Admin::Package::List"
 
 ```
 
@@ -358,6 +375,8 @@ sudo su - otrs -c "/opt/otrs/bin/otrs.Daemon.pl stop"
 
 # 3. Если на сервере крутится локальный почтовик (Postfix/Exim) или Fetchmail — ставим их на паузу
 sudo systemctl stop postfix 2>/dev/null || true
+
+Фаервол
 
 ----------------------------------------------
 
