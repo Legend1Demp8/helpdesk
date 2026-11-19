@@ -219,6 +219,19 @@ Loaded Modules:
 ```
 94 модуля, 71 основных модулей от старого сервера + 23 новых стандартных
 
+## 4. База данных
+### Было
+Версия MariaDB:
+```
+mysql -V
+mysql  Ver 15.1 Distrib 10.1.48-MariaDB, for Linux (x86_64) using
+```
+
+### Сейчас
+```
+mysql -V
+mysql  Ver 15.1 Distrib 10.5.29-MariaDB, for Linux (x86_64) using  EditLine wrapper
+```
 
 
 ## Процесс обновления
@@ -226,5 +239,5 @@ Loaded Modules:
 sudo dnf update
 sudo dnf install -y epel-release
 sudo dnf install -y httpd mod_ssl mod_http2 mod_perl
-
+sudo dnf install -y mariadb-server
 ```
