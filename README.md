@@ -1,7 +1,6 @@
 # helpdesk
 https://github.com/genilsonaborges/znuny-commands/blob/main/Znuny_install_EN.md
 curl -L https://github.com/znuny/Znuny/archive/refs/tags/rel-6_0_17.tar.gz -o /tmp/znuny-6.0.17.tar.gz
-curl -L https://github.com/znuny/Znuny/archive/refs/tags/rel-7_3_8.tar.gz -o /tmp/znuny-7.3.8.tar.gz
 
 ## Сверь локаль
 timedatectl
