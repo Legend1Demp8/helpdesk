@@ -1,4 +1,5 @@
 # helpdesk
+https://github.com/genilsonaborges/znuny-commands/blob/main/Znuny_install_EN.md
 
 ## Сверь локаль
 timedatectl
