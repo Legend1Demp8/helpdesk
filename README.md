@@ -382,6 +382,8 @@ su - otrs -c "/opt/otrs/bin/otrs.Console.pl Admin::Package::List"
 ```
 # 1. Выключаем веб-сервер, чтобы клиенты и агенты не создавали новые тикеты и сессии
 sudo systemctl stop httpd
+sudo systemctl stop crond
+sudo systemctl stop postfix
 
 # 2. Останавливаем планировщик Cron и демон OTRS (чтобы не забиралась почта и не срабатывали триггеры)
 sudo su - otrs -c "/opt/otrs/bin/Cron.sh stop"
